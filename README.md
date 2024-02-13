@@ -1,2 +1,2 @@
-# Getting Started with Create React App
+# An Application where you can set reviews and watch a short description about an movie
  
