@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 const tempMovieData = [
   {
@@ -47,12 +47,21 @@ const tempWatchedData = [
   },
 ];
 
+const KEY = "77c2ce";
+
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+
+  useEffect(function () {
+    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
+      .then((res) => res.json())
+      .then((data) => setMovies(data.Search));
+  }, []);
+
   return (
     <>
       <NavBar>
@@ -117,7 +126,7 @@ function Main({ children }) {
 function Box({ children }) {
   const [isOpen, setIsOpen] = useState(true);
   return (
-    <div className="box">
+    <div className="box hide-scrollbar">
       <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
         {isOpen ? "–" : "+"}
       </button>
@@ -150,7 +159,7 @@ function Box({ children }) {
 
 function MovieList({ movies }) {
   return (
-    <ul className="list">
+    <ul className="list hide-scrollbar">
       {movies?.map((movie) => (
         <Movie movie={movie} key={movie.imdbID} />
       ))}
@@ -204,7 +213,7 @@ function WatchedSummary({ watched }) {
 
 function WatchedMovieList({ watched }) {
   return (
-    <ul className="list">
+    <ul className="list hide-scrollbar">
       {watched.map((movie) => (
         <WatchedMovie movie={movie} key={movie.imdbID} />
       ))}
